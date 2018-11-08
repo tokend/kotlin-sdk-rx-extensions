@@ -27,7 +27,6 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation "io.reactivex.rxjava2:rxjava:2.2.2"
 
     compile "org.tokend:sdk:1.2.4"
