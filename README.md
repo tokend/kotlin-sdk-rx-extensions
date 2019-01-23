@@ -60,17 +60,17 @@ RxApiRequest.toSingle(request)
         });
 ```
 
-### KeyStorage requests
+### KeyServer requests
 
-You can use corresponding Kotlin extensions for `KeyStorage` methods
-or wrap methods calls with `RxKeyStorage` in Java.
+You can use corresponding Kotlin extensions for `KeyServer` methods
+or wrap methods calls with `RxKeyServer` in Java.
 
 Kotlin:
 
 ```kotlin
-val keyStorage = KeyStorage(api.wallets)
+val keyServer = KeyServer(api.wallets)
 
-keyStorage
+keyServer
         .getLoginParamsSingle()
         .subscribe(
                 { loginParams ->
@@ -85,9 +85,9 @@ keyStorage
 Java:
 
 ```java
-KeyStorage keyStorage = new KeyStorage(api.getWallets());
-RxKeyStorage
-        .getLoginParamsSingle(keyStorage)
+KeyServer keyServer = new KeyServer(api.getWallets());
+RxKeyServer
+        .getLoginParamsSingle(keyServer)
         .subscribe(new BiConsumer<LoginParams, Throwable>() {
             @Override
             public void accept(LoginParams loginParams, Throwable throwable) throws Exception {
@@ -141,3 +141,43 @@ RxAccount
             }
         });
 ```
+
+### Password TFA OTP generator
+You can get password-based OTP generation for TFA verification result
+as a `Single`:
+
+Kotlin:
+
+```kotlin
+PasswordTfaOtpGenerator()
+        .generateSingle(tfaException, email, password)
+        .subscribe { otp ->
+            System.out.println(otp)
+        }
+```
+
+Java:
+
+```java
+RxPasswordTfaOtpGenerator
+        .generateSingle(
+                new PasswordTfaOtpGenerator(),
+                tfaException,
+                email,
+                password
+        )
+        .subscribe(new BiConsumer<String, Throwable>() {
+            @Override
+            public void accept(String otp, Throwable throwable) throws Exception {
+                if (throwable != null) {
+                    throwable.printStackTrace();
+                } else {
+                    System.out.println(otp);
+                }
+            }
+        });
+```
+
+### Wallet encryption and derivation
+There are Kotlin extensions for `WalletEncryption` and `WalletKeyDerivation`
+and Java wrappers `RxWalletEncryption` and `RxWalletKeyDerivation`
