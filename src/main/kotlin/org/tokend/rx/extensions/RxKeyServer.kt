@@ -10,36 +10,6 @@ import org.tokend.wallet.NetworkParams
 import org.tokend.wallet.Transaction
 
 /**
- * @return lazy [Single] with wallet info request result
- *
- * @see KeyServer.getWalletInfo
- */
-@JvmOverloads
-fun KeyServer.getWalletInfoSingle(login: String,
-                                  password: CharArray,
-                                  isRecovery: Boolean = false): Single<WalletInfo> {
-    return Single.defer {
-        Single.just(getWalletInfo(login, password, isRecovery))
-    }
-}
-
-/**
- * @return lazy [Single] with wallet creation and saving result
- *
- * @see KeyServer.createAndSaveWallet
- */
-@JvmOverloads
-fun KeyServer.createAndSaveWalletSingle(email: String,
-                                        password: CharArray,
-                                        rootAccount: Account = Account.random(),
-                                        recoveryAccount: Account = Account.random()
-): Single<WalletCreateResult> {
-    return Single.defer {
-        Single.just(createAndSaveWallet(email, password, rootAccount, recoveryAccount))
-    }
-}
-
-/**
  * @see KeyServer.createWallet
  */
 @JvmOverloads
