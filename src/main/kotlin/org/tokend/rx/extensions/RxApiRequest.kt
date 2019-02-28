@@ -21,7 +21,11 @@ fun <T> ApiRequest<T>.toSingle(): Single<T> {
         request.executeAsync(object : ApiCallback<T> {
             override fun onSuccess(response: ApiResponse<T>) {
                 if (!it.isDisposed) {
-                    it.onSuccess(response.get())
+                    try {
+                        it.onSuccess(response.get())
+                    } catch (e: Exception) {
+                        it.tryOnError(e)
+                    }
                 }
             }
 
