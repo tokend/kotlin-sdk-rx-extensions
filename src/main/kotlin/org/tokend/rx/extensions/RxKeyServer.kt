@@ -23,11 +23,10 @@ fun KeyServer.Companion.createWalletSingle(
         password: CharArray,
         kdfAttributes: KdfAttributes,
         kdfVersion: Long,
-        rootAccount: Account = Account.random(),
-        recoveryAccount: Account = Account.random()
+        rootAccount: Account = Account.random()
 ): Single<WalletCreateResult> {
     return Single.defer {
-        Single.just(createWallet(email, password, kdfAttributes, kdfVersion, rootAccount, recoveryAccount))
+        Single.just(createWallet(email, password, kdfAttributes, kdfVersion, rootAccount))
     }
 }
 
@@ -40,10 +39,9 @@ fun createWalletSingle(
         password: CharArray,
         kdfAttributes: KdfAttributes,
         kdfVersion: Long,
-        rootAccount: Account = Account.random(),
-        recoveryAccount: Account = Account.random()
+        rootAccount: Account = Account.random()
 ): Single<WalletCreateResult> {
-    return KeyServer.createWalletSingle(email, password, kdfAttributes, kdfVersion, rootAccount, recoveryAccount)
+    return KeyServer.createWalletSingle(email, password, kdfAttributes, kdfVersion, rootAccount)
 }
 
 /**
@@ -55,11 +53,10 @@ fun KeyServer.Companion.createWalletSingle(
         email: String,
         password: CharArray,
         loginParams: LoginParams,
-        rootAccount: Account = Account.random(),
-        recoveryAccount: Account = Account.random()
+        rootAccount: Account = Account.random()
 ): Single<WalletCreateResult> {
     return Single.defer {
-        Single.just(createWallet(email, password, loginParams, rootAccount, recoveryAccount))
+        Single.just(createWallet(email, password, loginParams, rootAccount))
     }
 }
 
@@ -71,10 +68,9 @@ fun createWalletSingle(
         email: String,
         password: CharArray,
         loginParams: LoginParams,
-        rootAccount: Account = Account.random(),
-        recoveryAccount: Account = Account.random()
+        rootAccount: Account = Account.random()
 ): Single<WalletCreateResult> {
-    return KeyServer.createWalletSingle(email, password, loginParams, rootAccount, recoveryAccount)
+    return KeyServer.createWalletSingle(email, password, loginParams, rootAccount)
 }
 
 /**
