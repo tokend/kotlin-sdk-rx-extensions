@@ -19,7 +19,7 @@ compileJava {
 
 repositories {
     maven {
-        url "https://maven.tokend.org"
+        url "https://maven.tokend.io"
     }
     mavenCentral()
 }
