@@ -5,7 +5,6 @@ package org.tokend.rx.extensions
 import io.reactivex.Single
 import org.tokend.sdk.keyserver.KeyServer
 import org.tokend.sdk.keyserver.models.KdfAttributes
-import org.tokend.sdk.keyserver.models.LoginParams
 import org.tokend.sdk.keyserver.models.SignerData
 import org.tokend.sdk.keyserver.models.WalletCreateResult
 import org.tokend.wallet.Account
@@ -23,10 +22,11 @@ fun KeyServer.Companion.createWalletSingle(
         password: CharArray,
         kdfAttributes: KdfAttributes,
         kdfVersion: Long,
+        defaultSignerRole: Uint64,
         rootAccount: Account = Account.random()
 ): Single<WalletCreateResult> {
     return Single.defer {
-        Single.just(createWallet(email, password, kdfAttributes, kdfVersion, rootAccount))
+        Single.just(createWallet(email, password, kdfAttributes, kdfVersion, defaultSignerRole, rootAccount))
     }
 }
 
@@ -39,38 +39,41 @@ fun createWalletSingle(
         password: CharArray,
         kdfAttributes: KdfAttributes,
         kdfVersion: Long,
+        defaultSignerRole: Uint64,
         rootAccount: Account = Account.random()
 ): Single<WalletCreateResult> {
-    return KeyServer.createWalletSingle(email, password, kdfAttributes, kdfVersion, rootAccount)
+    return KeyServer.createWalletSingle(email, password, kdfAttributes, kdfVersion, defaultSignerRole, rootAccount)
 }
 
 /**
  * @see KeyServer.createWallet
  */
-@JvmOverloads
 @JvmName("_createWalletSingle")
 fun KeyServer.Companion.createWalletSingle(
         email: String,
         password: CharArray,
-        loginParams: LoginParams,
-        rootAccount: Account = Account.random()
+        kdfAttributes: KdfAttributes,
+        kdfVersion: Long,
+        rootAccount: Account,
+        signers: Collection<SignerData>
 ): Single<WalletCreateResult> {
     return Single.defer {
-        Single.just(createWallet(email, password, loginParams, rootAccount))
+        Single.just(createWallet(email, password, kdfAttributes, kdfVersion, rootAccount, signers))
     }
 }
 
 /**
  * @see KeyServer.createWallet
  */
-@JvmOverloads
 fun createWalletSingle(
         email: String,
         password: CharArray,
-        loginParams: LoginParams,
-        rootAccount: Account = Account.random()
+        kdfAttributes: KdfAttributes,
+        kdfVersion: Long,
+        rootAccount: Account,
+        signers: Collection<SignerData>
 ): Single<WalletCreateResult> {
-    return KeyServer.createWalletSingle(email, password, loginParams, rootAccount)
+    return KeyServer.createWalletSingle(email, password, kdfAttributes, kdfVersion, rootAccount, signers)
 }
 
 /**
@@ -83,11 +86,10 @@ fun KeyServer.Companion.createSignersUpdateTransactionSingle(
         currentAccount: Account,
         signers: Collection<SignerData>,
         newAccount: Account,
-        defaultSignerRole: Uint64,
-        defaultSignerDetailsJson: String): Single<Transaction> {
+        defaultSignerRole: Uint64): Single<Transaction> {
     return Single.defer {
         Single.just(createSignersUpdateTransaction(networkParams, originalAccountId, currentAccount,
-                signers, newAccount, defaultSignerRole, defaultSignerDetailsJson))
+                signers, newAccount, defaultSignerRole))
     }
 }
 
@@ -100,8 +102,7 @@ fun createSignersUpdateTransactionSingle(
         currentAccount: Account,
         signers: Collection<SignerData>,
         newAccount: Account,
-        defaultSignerRole: Uint64,
-        defaultSignerDetailsJson: String): Single<Transaction> {
+        defaultSignerRole: Uint64): Single<Transaction> {
     return KeyServer.createSignersUpdateTransactionSingle(networkParams, originalAccountId, currentAccount,
-            signers, newAccount, defaultSignerRole, defaultSignerDetailsJson)
+            signers, newAccount, defaultSignerRole)
 }
