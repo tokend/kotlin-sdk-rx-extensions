@@ -15,7 +15,7 @@ allprojects {
 
 dependencies {
     ...
-    compile "org.tokend:rx-sdk:2.1.0"
+    compile "org.tokend:rx-sdk:2.2.0"
 }
 
 ```
@@ -74,7 +74,9 @@ keyServer
         .createWalletSingle(
             email,
             password,
-            loginParams
+            kdfAttributes,
+            kdfVersion,
+            defaultSignerRole
         )
         .subscribe(
                 { result ->
@@ -95,7 +97,9 @@ RxKeyServer
             keyServer,
             email,
             password,
-            loginParams
+            kdfAttributes,
+            kdfVersion,
+            defaultSignerRole
         )
         .subscribe(new BiConsumer<WalletCreateResult, Throwable>() {
             @Override

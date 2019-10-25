@@ -45,6 +45,6 @@ compileTestKotlin {
 apply from: "deploy.gradle"
 
 group 'org.tokend'
-version '2.1.0'
+version '2.2.0'
 uploadArchives.repositories.mavenDeployer.pom.artifactId = 'rx-sdk'
 uploadArchives.repositories.mavenDeployer.pom.name = 'TokenD SDK Rx extensions'
