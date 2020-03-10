@@ -8,12 +8,11 @@ import io.reactivex.disposables.Disposable
 import org.tokend.sdk.api.base.ApiRequest
 
 /**
- * Converts given request to a lazy [Single].
- * Source request will be executed on subscription
- * and can be canceled by disposing it.
+ * Creates a lazy [Single] from request's clone, which will be
+ * executed on subscription and can be canceled by disposing.
  */
 fun <T> ApiRequest<T>.toSingle(): Single<T> = Single.create<T> { emitter ->
-    val request = this
+    val request = clone()
     var isDisposed = false
 
     emitter.setDisposable(object : Disposable {
@@ -42,12 +41,11 @@ fun <T> ApiRequest<T>.toSingle(): Single<T> = Single.create<T> { emitter ->
 }
 
 /**
- * Converts given request with no result to a lazy [Completable].
- * Source request will be executed on subscription
- * and can be canceled by disposing it.
+ * Creates a lazy [Completable] from request's clone, which will be
+ * executed on subscription and can be canceled by disposing.
  */
 fun ApiRequest<Void>.toCompletable() = Completable.create { emitter ->
-    val request = this
+    val request = clone()
     var isDisposed = false
 
     emitter.setDisposable(object : Disposable {
