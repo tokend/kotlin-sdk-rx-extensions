@@ -5,84 +5,68 @@ package org.tokend.rx.extensions
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
-import org.tokend.sdk.api.base.ApiCallback
 import org.tokend.sdk.api.base.ApiRequest
-import org.tokend.sdk.api.base.model.ApiResponse
 
 /**
  * Converts given request to a lazy [Single].
  * Source request will be executed on subscription
- * and can be canceled by disposing of it.
+ * and can be canceled by disposing it.
  */
-fun <T> ApiRequest<T>.toSingle(): Single<T> {
-    return Single.create<T> {
-        val request = this
+fun <T> ApiRequest<T>.toSingle(): Single<T> = Single.create<T> { emitter ->
+    val request = this
+    var isDisposed = false
 
-        request.executeAsync(object : ApiCallback<T> {
-            override fun onSuccess(response: ApiResponse<T>) {
-                if (!it.isDisposed) {
-                    try {
-                        it.onSuccess(response.get())
-                    } catch (e: Exception) {
-                        it.tryOnError(e)
-                    }
-                }
-            }
+    emitter.setDisposable(object : Disposable {
+        override fun isDisposed() = isDisposed
 
-            override fun onError(error: Throwable) {
-                if (!it.isDisposed) {
-                    it.tryOnError(error)
-                }
-            }
-        })
+        override fun dispose() {
+            request.cancel()
+            isDisposed = true
+        }
+    })
 
-        it.setDisposable(object : Disposable {
-            private var disposed = false
-            override fun isDisposed(): Boolean {
-                return disposed
+    try {
+        val response = request.execute()
+        if (!isDisposed) {
+            try {
+                emitter.onSuccess(response.get())
+            } catch (e: Throwable) {
+                emitter.tryOnError(e)
             }
-
-            override fun dispose() {
-                request.cancel()
-                disposed = true
-            }
-        })
+        }
+    } catch (e: Throwable) {
+        if (!isDisposed) {
+            emitter.tryOnError(e)
+        }
     }
 }
 
 /**
  * Converts given request with no result to a lazy [Completable].
  * Source request will be executed on subscription
- * and can be canceled by disposing of it.
+ * and can be canceled by disposing it.
  */
-fun ApiRequest<Void>.toCompletable(): Completable {
-    return Completable.create {
-        val request = this
+fun ApiRequest<Void>.toCompletable() = Completable.create { emitter ->
+    val request = this
+    var isDisposed = false
 
-        request.executeAsync(object : ApiCallback<Void> {
-            override fun onSuccess(response: ApiResponse<Void>) {
-                if (!it.isDisposed) {
-                    it.onComplete()
-                }
-            }
+    emitter.setDisposable(object : Disposable {
+        override fun isDisposed() = isDisposed
 
-            override fun onError(error: Throwable) {
-                if (!it.isDisposed) {
-                    it.tryOnError(error)
-                }
-            }
-        })
+        override fun dispose() {
+            request.cancel()
+            isDisposed = true
+        }
+    })
 
-        it.setDisposable(object : Disposable {
-            private var disposed = false
-            override fun isDisposed(): Boolean {
-                return disposed
-            }
-
-            override fun dispose() {
-                request.cancel()
-                disposed = true
-            }
-        })
+    try {
+        request.execute()
+        if (!isDisposed) {
+            emitter.onComplete()
+        }
+    } catch (e: Throwable) {
+        if (!isDisposed) {
+            emitter.tryOnError(e)
+        }
     }
 }
