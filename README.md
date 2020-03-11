@@ -194,3 +194,48 @@ RxPasswordTfaOtpGenerator
 ### Wallet encryption and derivation
 There are Kotlin extensions for `WalletEncryption` and `WalletKeyDerivation`
 and Java wrappers `RxWalletEncryption` and `RxWalletKeyDerivation`
+
+### Streamers
+
+Kotlin:
+
+```kotlin
+val streamer = SimpleRxPagedResourceStreamer({ nextCursor ->
+    api.v3.transactions.get(
+            TransactionsPageParams(
+                    pagingParams = PagingParamsV2(page = nextCursor)
+            )
+    )
+})
+
+streamer
+        .observable
+        .subscribe { /* ... */ }
+```
+
+Java: 
+
+```java
+RxPagedResourceStreamer streamer = new RxPagedResourceStreamer<TransactionResource>() {
+    @NotNull
+    @Override
+    protected ApiRequest<DataPage<TransactionResource>> getPageRequest(@Nullable String s) {
+        return api.getV3().getTransactions().get(
+                new TransactionsPageParams.Builder()
+                        .withPagingParams(new PagingParamsV2.Builder()
+                                .withPage(s)
+                                .build())
+                        .build()
+        );
+    }
+
+    @Override
+    protected boolean isErrorFatal(@NotNull Throwable throwable) {
+        return false;
+    }
+};
+
+streamer
+        .getObservable()
+        .subscribe(/* ... */);
+```
