@@ -29,7 +29,7 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:2.2.2"
 
-    implementation "org.tokend:sdk:3.4.0"
+    implementation "org.tokend:sdk:3.6.0"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
@@ -45,6 +45,6 @@ compileTestKotlin {
 apply from: "deploy.gradle"
 
 group 'org.tokend'
-version '2.3.0'
+version '2.4.0'
 uploadArchives.repositories.mavenDeployer.pom.artifactId = 'rx-sdk'
 uploadArchives.repositories.mavenDeployer.pom.name = 'TokenD SDK Rx extensions'

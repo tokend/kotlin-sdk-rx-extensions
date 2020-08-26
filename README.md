@@ -15,7 +15,7 @@ allprojects {
 
 dependencies {
     ...
-    compile "org.tokend:rx-sdk:2.3.0"
+    compile "org.tokend:rx-sdk:2.4.0"
 }
 
 ```
@@ -55,59 +55,6 @@ RxApiRequest.toSingle(request)
                     throwable.printStackTrace();
                 } else {
                     System.out.println(systemInfo.getPassphrase());
-                }
-            }
-        });
-```
-
-### KeyServer actions
-
-You can use corresponding Kotlin extensions for `KeyServer` methods
-or wrap methods calls with `RxKeyServer` in Java.
-
-Kotlin:
-
-```kotlin
-val keyServer = KeyServer(api.wallets)
-
-keyServer
-        .createWalletSingle(
-            email,
-            password,
-            kdfAttributes,
-            kdfVersion,
-            defaultSignerRole
-        )
-        .subscribe(
-                { result ->
-                    System.out.println(result.rootAccount.accountId)
-                },
-                { error ->
-                    error.printStackTrace()
-                }
-        )
-```
-
-Java:
-
-```java
-KeyServer keyServer = new KeyServer(api.getWallets());
-RxKeyServer
-        .createWalletSingle(
-            keyServer,
-            email,
-            password,
-            kdfAttributes,
-            kdfVersion,
-            defaultSignerRole
-        )
-        .subscribe(new BiConsumer<WalletCreateResult, Throwable>() {
-            @Override
-            public void accept(WalletCreateResult result, Throwable throwable) throws Exception {
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                } else {
-                    System.out.println(result.getRootAccount().getAccountId());
                 }
             }
         });
