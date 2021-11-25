@@ -31,8 +31,9 @@ and can be canceled by disposing of it.
 Kotlin:
 ```kotlin
 api
-    .general
-    .getSystemInfo()
+    .v3
+    .info
+    .getInfo()
     .toSingle()
     .subscribe(
             { systemInfo ->
@@ -46,7 +47,7 @@ api
 
 Java:
 ```java
-ApiRequest<SystemInfo> request = api.getGeneral().getSystemInfo();
+ApiRequest<SystemInfo> request = api.v3.info.getInfo();
 RxApiRequest.toSingle(request)
         .subscribe(new BiConsumer<SystemInfo, Throwable>() {
             @Override
