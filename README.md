@@ -15,7 +15,7 @@ allprojects {
 
 dependencies {
     ...
-    compile "org.tokend:rx-sdk:2.4.0"
+    compile "org.tokend:rx-sdk:2.5.0"
 }
 
 ```
