@@ -4,7 +4,6 @@ package org.tokend.rx.extensions
 
 import io.reactivex.Single
 import org.tokend.sdk.keyserver.WalletEncryption
-import org.tokend.sdk.keyserver.models.EncryptedWalletAccount
 import org.tokend.sdk.keyserver.models.KeychainData
 import org.tokend.wallet.Account
 
@@ -12,9 +11,11 @@ import org.tokend.wallet.Account
  * @see WalletEncryption.encryptSecretSeed
  */
 @JvmName("_encryptSecretSeedSingle")
-fun WalletEncryption.encryptSecretSeedSingle(seed: CharArray,
-                                             iv: ByteArray,
-                                             walletEncryptionKey: ByteArray): Single<KeychainData> {
+fun WalletEncryption.encryptSecretSeedSingle(
+    seed: CharArray,
+    iv: ByteArray,
+    walletEncryptionKey: ByteArray
+): Single<KeychainData> {
     return Single.defer {
         Single.just(encryptSecretSeed(seed, iv, walletEncryptionKey))
     }
@@ -23,9 +24,11 @@ fun WalletEncryption.encryptSecretSeedSingle(seed: CharArray,
 /**
  * @see WalletEncryption.encryptSecretSeed
  */
-fun encryptSecretSeedSingle(seed: CharArray,
-                            iv: ByteArray,
-                            walletEncryptionKey: ByteArray): Single<KeychainData> {
+fun encryptSecretSeedSingle(
+    seed: CharArray,
+    iv: ByteArray,
+    walletEncryptionKey: ByteArray
+): Single<KeychainData> {
     return WalletEncryption.encryptSecretSeedSingle(seed, iv, walletEncryptionKey)
 }
 
@@ -33,8 +36,10 @@ fun encryptSecretSeedSingle(seed: CharArray,
  * @see WalletEncryption.decryptSecretSeed
  */
 @JvmName("_decryptSecretSeedSingle")
-fun WalletEncryption.decryptSecretSeedSingle(keychainData: KeychainData,
-                                             walletEncryptionKey: ByteArray): Single<CharArray> {
+fun WalletEncryption.decryptSecretSeedSingle(
+    keychainData: KeychainData,
+    walletEncryptionKey: ByteArray
+): Single<CharArray> {
     return Single.defer {
         Single.just(decryptSecretSeed(keychainData, walletEncryptionKey))
     }
@@ -43,55 +48,55 @@ fun WalletEncryption.decryptSecretSeedSingle(keychainData: KeychainData,
 /**
  * @see WalletEncryption.decryptSecretSeed
  */
-fun decryptSecretSeedSingle(keychainData: KeychainData,
-                            walletEncryptionKey: ByteArray): Single<CharArray> {
+fun decryptSecretSeedSingle(
+    keychainData: KeychainData,
+    walletEncryptionKey: ByteArray
+): Single<CharArray> {
     return WalletEncryption.decryptSecretSeedSingle(keychainData, walletEncryptionKey)
 }
 
 /**
- * @see WalletEncryption.encryptAccount
+ * @see WalletEncryption.encryptAccounts
  */
 @JvmName("_encryptAccountSingle")
-fun WalletEncryption.encryptAccountSingle(email: String,
-                                          seed: CharArray,
-                                          accountId: String,
-                                          walletEncryptionKey: ByteArray,
-                                          keyDerivationSalt: ByteArray): Single<EncryptedWalletAccount> {
+fun WalletEncryption.encryptAccountsSingle(
+    accounts: List<Account>,
+    walletEncryptionKey: ByteArray,
+): Single<KeychainData> {
     return Single.defer {
-        Single.just(encryptAccount(email, seed, accountId, walletEncryptionKey, keyDerivationSalt))
+        Single.just(encryptAccounts(accounts, walletEncryptionKey))
     }
 }
 
 /**
- * @see WalletEncryption.encryptAccount
+ * @see WalletEncryption.encryptAccounts
  */
-fun encryptAccountSingle(email: String,
-                         seed: CharArray,
-                         accountId: String,
-                         walletEncryptionKey: ByteArray,
-                         keyDerivationSalt: ByteArray): Single<EncryptedWalletAccount> {
-    return WalletEncryption.encryptAccountSingle(email, seed, accountId, walletEncryptionKey, keyDerivationSalt)
+fun encryptAccountSingle(
+    accounts: List<Account>,
+    walletEncryptionKey: ByteArray,
+): Single<KeychainData> {
+    return WalletEncryption.encryptAccountsSingle(accounts, walletEncryptionKey)
 }
 
 /**
- * @see WalletEncryption.encryptAccount
+ * @see WalletEncryption.decryptAccounts
  */
-@JvmName("_encryptAccountSingle")
-fun WalletEncryption.encryptAccountSingle(email: String,
-                                          account: Account,
-                                          walletEncryptionKey: ByteArray,
-                                          keyDerivationSalt: ByteArray): Single<EncryptedWalletAccount> {
+@JvmName("_decryptAccountSingle")
+fun WalletEncryption.decryptAccountsSingle(
+    keychainData: KeychainData,
+    walletEncryptionKey: ByteArray,
+): Single<List<Account>> {
     return Single.defer {
-        Single.just(encryptAccount(email, account, walletEncryptionKey, keyDerivationSalt))
+        Single.just(decryptAccounts(keychainData, walletEncryptionKey))
     }
 }
 
 /**
- * @see WalletEncryption.encryptAccount
+ * @see WalletEncryption.decryptAccounts
  */
-fun encryptAccountSingle(email: String,
-                         account: Account,
-                         walletEncryptionKey: ByteArray,
-                         keyDerivationSalt: ByteArray): Single<EncryptedWalletAccount> {
-    return WalletEncryption.encryptAccountSingle(email, account, walletEncryptionKey, keyDerivationSalt)
+fun decryptAccountsSingle(
+    keychainData: KeychainData,
+    walletEncryptionKey: ByteArray,
+): Single<List<Account>> {
+    return WalletEncryption.decryptAccountsSingle(keychainData, walletEncryptionKey)
 }
